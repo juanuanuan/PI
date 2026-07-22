@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/joaomariapontes/Desktop/PI/Aulas/tp1'
+relocations:     []
+...

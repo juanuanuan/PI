@@ -1,0 +1,111 @@
+#include <stdlib.h>
+
+typedef struct {
+    int inf, sup;
+} Intervalo;
+
+
+int cardinalidade(Intervalo c[], int N){
+    int total = 0;
+
+    if(N == 0) return 0;
+
+    for(int i = 0; i < N; i ++){
+        total += c[i].sup - c[i].inf + 1;
+    }
+
+    return total;
+}
+
+typedef struct no{
+    int valor;
+    struct no *prox;
+} *LInt;
+
+LInt arrayToList(int v[], int N){
+    int i = 1;
+
+    LInt new = malloc(sizeof(*new));
+    new -> valor = v[0];
+    new -> prox = NULL;
+
+    while(i < N){
+        LInt aux = malloc(sizeof(struct no));
+        aux -> valor = v[i];
+        aux -> prox = NULL;
+        new -> prox = aux;
+        new = new -> prox;
+        i++;
+    }
+
+    return new;
+}
+
+int apaga(LInt *l, int x){
+
+    int ocurrencias = 0;
+
+    if(!(*l)) return -1;
+
+    while((*l) -> prox != NULL){
+        if((*l) -> valor == x){
+            LInt temp = *l;
+            *l = (*l) -> prox;
+            free(temp);
+            ocurrencias ++;
+        }
+
+        l = &((*l) -> prox);
+    }
+
+    return ocurrencias;
+}
+
+typedef struct nodo{
+    int valor;
+    struct nodo *l, *r;
+} *ABin;
+
+int parentescoRec(ABin a, int x){
+
+    if(!a) return 0;
+
+    if(a -> valor == x) return 0;
+
+    int nodosL = parentescoRec(a -> l, x);
+    int nodosR = parentescoRec(a -> r, x);
+
+    return nodosL + nodosR;
+
+}
+
+ABin menorNoComum(ABin a, int x, int y){
+    if(!a) return NULL;
+    ABin node = a;
+
+    int found = 1;
+    while(found){
+        if(x < a -> valor && y < a -> valor){
+            node = a -> l;
+        } else if(x > a -> valor && y > a -> valor){
+            node = a -> r;
+        } else {
+            found = 0;
+        }
+    }
+
+    return node;
+
+}
+
+int parentesco(ABin a, int x, int y){
+    
+    a = menorNoComum(a, x, y);
+    
+    int distX = parentescoRec(a, x);
+    int distY = parentescoRec(a, y);
+
+    return distX + distY;
+}
+
+
